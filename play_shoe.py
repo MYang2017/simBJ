@@ -16,7 +16,7 @@ class PlayShoe(object):
     """
     def __init__(
             self, rules, players, seed_number=None, penetration=0.75,
-            simulations=10000, figures=False
+            simulations=10000, figures=False, display_text=False
     ):
         """
         Parameters
@@ -43,6 +43,12 @@ class PlayShoe(object):
         self._penetration = penetration
         self._simulations = simulations
         self._figures = figures
+        self._display_text = display_text
+        self._output = {}
+
+    @property
+    def output(self):
+        return self._output
 
     @property
     def rules(self):
@@ -71,6 +77,10 @@ class PlayShoe(object):
     @property
     def figures(self):
         return self._figures
+
+    @property
+    def display_text(self):
+        return self.display_text
 
     def main(self):
 
@@ -177,10 +187,11 @@ class PlayShoe(object):
                             c.add_to_seen_cards(card=dealer_hole_card)
 
         # print out rules used for simulation
-        print('\n')
-        print('Rules:', self._rules.__str__())
-        print('-------' + '-' * self.rules.__str__().__len__())
-        print('\n')
+        if self._display_text:
+            print('\n')
+            print('Rules:', self._rules.__str__())
+            print('-------' + '-' * self.rules.__str__().__len__())
+            print('\n')
 
         # unpacked nested dictionary
         for p in self._players:
@@ -217,19 +228,21 @@ class PlayShoe(object):
             net_winnings_total = np.sum(net_winnings * initial_bet_count)
             overall_bet_total = np.sum(overall_bet * initial_bet_count)
             initial_bet_total = np.sum(num_rounds * initial_bet_count)
+            self._output[p.name] = 100 * (net_winnings_total / initial_bet_total)
 
-            # overall statistics
-            print('Player:', p.name)
-            print('--------' + '-' * len(p.name))
-            print('Total rounds played:', np.sum(num_rounds))
-            print('Split hands:', np.sum(split_hands))
-            if np.sum(num_rounds) > 0:  # prevents divide by zero issues
-                print('Total amount bet:', overall_bet_total)
-                print('Total initial bet:', initial_bet_total)
-                print('Total net winnings:', net_winnings_total)
-                print('House edge:', 100 * (net_winnings_total/initial_bet_total))
-                print('Element of risk:', 100 * (net_winnings_total/overall_bet_total))
-                print('\n')
+            if self._display_text:
+                # overall statistics
+                print('Player:', p.name)
+                print('--------' + '-' * len(p.name))
+                print('Total rounds played:', np.sum(num_rounds))
+                print('Split hands:', np.sum(split_hands))
+                if np.sum(num_rounds) > 0:  # prevents divide by zero issues
+                    print('Total amount bet:', overall_bet_total)
+                    print('Total initial bet:', initial_bet_total)
+                    print('Total net winnings:', net_winnings_total)
+                    print('House edge:', 100 * (net_winnings_total/initial_bet_total))
+                    print('Element of risk:', 100 * (net_winnings_total/overall_bet_total))
+                    print('\n')
 
             # figures are only created for players that are counting cards
             if self._figures:
