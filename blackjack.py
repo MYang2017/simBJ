@@ -13,27 +13,27 @@ if __name__ == "__main__":
                 blackjack_payout=1.5,
                 max_hands=4,
                 double_down=True,
-                split_unlike_tens=True,
+                split_unlike_tens=False,
                 double_after_split=True,
-                resplit_aces=False,
+                resplit_aces=True,
                 insurance=True,
-                late_surrender=True,
+                late_surrender=False,
                 dealer_shows_hole_card=True
     )
 
     # players that will be added to table
     p = [
             Player(
-                name='Card Counter',
+                name='letsgo',
                 rules=r,
-                bankroll=12000,
+                bankroll=2000,
                 min_bet=10,
-                bet_spread=10,
-                bet_count_amount=[(1, 10), (3, 50), (7, 75)],
+                bet_spread=5,
+                bet_count_amount=[(1, 10), (3, 50)],
                 play_strategy='Basic',
                 bet_strategy='Spread',
-                count_strategy='Halves',
-                insurance=5
+                count_strategy='Hi-Lo',
+                insurance=50
             ),
             Player(
                 name='Average',
@@ -44,19 +44,6 @@ if __name__ == "__main__":
                 bet_strategy='Flat',
                 count_strategy=None,
             ),
-            Player(
-                name='Back Counter',
-                rules=r,
-                bankroll=50000,
-                min_bet=25,
-                bet_spread=12,
-                bet_count_amount=[(1, 25), (3, 95), (5, 165), (10, 235)],
-                play_strategy='Basic',
-                bet_strategy='Spread',
-                count_strategy='Hi-Lo',
-                back_counting=True,
-                back_counting_entry_exit=[5, 1]
-            )
     ]
 
     # set up shoe simulation
@@ -64,7 +51,7 @@ if __name__ == "__main__":
             rules=r,
             players=p,
             seed_number=78,
-            simulations=10000,
+            simulations=5000,
             penetration=0.75,
             figures=True
     )
