@@ -33,7 +33,7 @@ def deal_hands(table, cards):
     return dealer_hand
 
 
-def players_play_hands(table, rules, cards, dealer_hand, dealer_up_card):
+def players_play_hands(table, rules, cards, dealer_hand, dealer_up_card, funky_display=False):
     """
     Players at the table play out their individual hands.
 
@@ -58,6 +58,8 @@ def players_play_hands(table, rules, cards, dealer_hand, dealer_up_card):
         # initial hand
         hand = p.get_hand(key=1)
         total, soft_hand = count_hand(hand=hand)
+        if funky_display:
+            print('{}\'s begin hand {}'.format(p.name, hand))
 
         # insurance option
         if rules.insurance and dealer_up_card == 1:
@@ -136,7 +138,6 @@ def players_play_hands(table, rules, cards, dealer_hand, dealer_up_card):
 
             for k in keys:
                 processed.add(k)
-
                 while not p.get_stand(key=k):
 
                     if len(p.get_hand(key=k)) == 1:  # hands of length 1 are hands that have just been split
@@ -207,6 +208,10 @@ def players_play_hands(table, rules, cards, dealer_hand, dealer_up_card):
 
                     else:
                         raise NotImplementedError('No implementation for flag.')
+
+                    if funky_display:
+                        print(decision)
+                        print(hand)
 
 
 def dealer_turn(table):

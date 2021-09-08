@@ -16,7 +16,7 @@ class PlayShoe(object):
     """
     def __init__(
             self, rules, players, seed_number=None, penetration=0.75,
-            simulations=10000, figures=False, display_text=False
+            simulations=10000, figures=False, display_text=False, funky_display=False
     ):
         """
         Parameters
@@ -44,6 +44,7 @@ class PlayShoe(object):
         self._simulations = simulations
         self._figures = figures
         self._display_text = display_text
+        self._funky_display = funky_display
         self._output = {}
 
     @property
@@ -82,6 +83,10 @@ class PlayShoe(object):
     def display_text(self):
         return self.display_text
 
+    @property
+    def funky_display(self):
+        return self.funky_display
+
     def main(self):
 
         # set seed to replicate results
@@ -100,7 +105,6 @@ class PlayShoe(object):
         balanced_card_counting_systems = ['Hi-Lo', 'Hi-Opt I', 'Hi-Opt II', 'Omega II', 'Halves', 'Zen Count']
 
         for sim in range(0, self._simulations):
-
             # set up cards and shuffle
             c = Cards(rules=self._rules)
             c.shuffle()
@@ -142,6 +146,8 @@ class PlayShoe(object):
                     # dealers cards
                     dealer_hole_card = dealer_hand[0]
                     dealer_up_card = dealer_hand[1]
+                    if self._funky_display:
+                        print('dealer revealed card {}, hidden card {}'.format(dealer_hand[1], dealer_hand[0]))
 
                     # re-compute counts before insurance bet
                     if self._rules.insurance:
@@ -163,7 +169,8 @@ class PlayShoe(object):
                         rules=self._rules,
                         cards=c,
                         dealer_hand=dealer_hand,
-                        dealer_up_card=dealer_up_card
+                        dealer_up_card=dealer_up_card,
+                        funky_display=self._funky_display
                     )
 
                     # dealer acts if one or more players have a live hand
